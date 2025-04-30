@@ -7,13 +7,13 @@ const cookieParser = require('cookie-parser')
 const app = express()
 //middleware
 app.use(cors({
-  origin:'http://localhost:5173',
+  origin:'https://client-electropoint.web.app',
   credentials:true,
   methods:['GET','PUT','PATCH','POST','DELETE']
 }))
 app.use(express.json())
 app.use(cookieParser())
-
+  
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.2bkjf.mongodb.net/?appName=Cluster0`;
@@ -45,14 +45,14 @@ async function run() {
         const token = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{
           expiresIn:'7d'
         })
-        console.log(token);
+        // console.log(token);
         
         // document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
 
         res.cookie('token',token,{
           httpOnly:true,
-           secure:  process.env.NODE_ENV === 'production',
-          sameSite:  process.env.NODE_ENV === 'production'?  'none' : 'lax',
+           secure: true, //process.env.NODE_ENV === 'production',
+          sameSite: 'none', //process.env.NODE_ENV === 'production'?  'none' : 'lax',
           maxAge:7 * 24 * 60 * 60 * 1000,
       // expires: new Date(0), // Token expiration time
     path: '/'
@@ -87,6 +87,23 @@ async function run() {
         }
         next()
      }
+
+
+     app.get('/verify-token', async (req,res)=> {
+       const token = req.cookies.token;
+      //  console.log(token);
+       
+       if(!token){
+        return res.status(401).send({error:true, message: 'unauthorized access'})
+       }
+       jwt.verify(token,process.env.ACCESS_TOKEN_SECRET, (err,decoded)=> {
+        if(err){
+          return res.status(403).send({error:true, message: 'token expaired or invalid'})
+        }
+        return res.send({user:decoded})
+       })
+
+     })
     
       
         //user related api
@@ -114,8 +131,8 @@ async function run() {
                  }
                  const user = await userCollection.findOne({email:email})
                  const result = {admin: user?.role === 'admin'}
-                 console.log("Decoded Email:", req.decoded.email)
-                 console.log("Requested Email:", email)
+                //  console.log("Decoded Email:", req.decoded.email)
+                //  console.log("Requested Email:", email)
                  res.send(result)
     
 
