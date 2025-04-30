@@ -5,6 +5,13 @@ require("dotenv").config()
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 const app = express()
+
+// Manually setting CORS headers to allow specific domain
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://client-electropoint.web.app'); // specify the domain allowed
+  res.header('Access-Control-Allow-Credentials', 'true'); // Allow credentials like cookies/authentication
+  next(); // Proceed to the next middleware or route
+});
 //middleware
 app.use(cors({
   origin:'https://client-electropoint.web.app',
