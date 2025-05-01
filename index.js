@@ -6,17 +6,14 @@ const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 const app = express()
 
-// Manually setting CORS headers to allow specific domain
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://client-electropoint.web.app'); // specify the domain allowed
-  res.header('Access-Control-Allow-Credentials', 'true'); // Allow credentials like cookies/authentication
-  next(); // Proceed to the next middleware or route
-});
+
+
 //middleware
 app.use(cors({
   origin:'https://client-electropoint.web.app',
   credentials:true,
-  methods:['GET','PUT','PATCH','POST','DELETE']
+  methods:['GET','PUT','PATCH','POST','DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }))
 app.use(express.json())
 app.use(cookieParser())
@@ -141,9 +138,7 @@ async function run() {
                 //  console.log("Decoded Email:", req.decoded.email)
                 //  console.log("Requested Email:", email)
                  res.send(result)
-    
-
-        })
+             })
 
         app.patch('/users/admin/:id',verifyToken,async(req,res)=> {
           const id = req.params.id;
