@@ -111,7 +111,7 @@ async function run() {
     
       
         //user related api
-        app.get('/users',verifyToken, async(req,res)=> {
+        app.get('/users', async(req,res)=> {
            const result = await userCollection.find().toArray()
            res.send(result)
         })
@@ -128,7 +128,7 @@ async function run() {
           res.send(result)
         })
 
-        app.get('/users/admin/:email',verifyToken, async(req,res)=> {
+        app.get('/users/admin/:email', async(req,res)=> {
                  const email = req.params.email;
                  if(req.decoded.email !==email){
                  return res.status(403).send({admin:false})
@@ -140,7 +140,7 @@ async function run() {
                  res.send(result)
              })
 
-        app.patch('/users/admin/:id',verifyToken,async(req,res)=> {
+        app.patch('/users/admin/:id',async(req,res)=> {
           const id = req.params.id;
           const filter = {_id: new ObjectId(id)}
           const updateDoc = {
@@ -162,12 +162,12 @@ async function run() {
         })
 
         //product related api
-        app.get('/products',verifyToken, async(req,res)=> {
+        app.get('/products', async(req,res)=> {
             const result = await productCollection.find().toArray()
             res.send(result)
         })
 
-        app.post('/products', verifyToken,verifyAdmin, async(req,res)=> {
+        app.post('/products', async(req,res)=> {
             const item = req.body;
             const result = await productCollection.insertOne(item)
             res.send(result)
@@ -201,13 +201,13 @@ async function run() {
         })
 
         //cart related api
-        app.get('/carts', verifyToken, async(req,res)=> {
+        app.get('/carts',  async(req,res)=> {
           const email = req.query.email;
           const result = await cartCollection.find({userEmail: email}).toArray()
           res.send(result)
         })
 
-        app.post('/carts',verifyToken,async(req,res)=> {
+        app.post('/carts',async(req,res)=> {
           const cartItem = req.body;
           const result = await cartCollection.insertOne(cartItem)
           res.send(result)
@@ -238,7 +238,7 @@ async function run() {
         //})
       
         //order related api
-        app.get('/orders', verifyToken, async(req,res)=> {
+        app.get('/orders',  async(req,res)=> {
           const result = await ordersCollection.find().toArray()
           res.send(result)
         })
@@ -276,11 +276,11 @@ async function run() {
         // })
 
         //setting related api
-        app.get('/settings', verifyToken, async(req,res)=> {
+        app.get('/settings',  async(req,res)=> {
           const result = await settingCollection.findOne({})
           res.send(result)
         })
-        app.post('/settings',verifyToken,async(req,res)=> {
+        app.post('/settings',async(req,res)=> {
           const settingsData =req.body;
           const filter = {};
           const options = {upsert: true};
