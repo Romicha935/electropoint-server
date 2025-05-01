@@ -173,7 +173,7 @@ async function run() {
             res.send(result)
         })
 
-        app.patch('/products/:id',async(req,res)=> {
+        app.patch('/products/:id',verifyToken, async(req,res)=> {
           const product = req.body;
           const id = req.params.id;
           console.log('idd',id);
@@ -193,7 +193,7 @@ async function run() {
           const result = await productCollection.updateOne(filter,updateDoc)
           res.send(result)
         })
-        app.delete('/products/:id',  async(req,res)=> {
+        app.delete('/products/:id', verifyToken, async(req,res)=> {
             const id = req.params.id;
             const query = {_id: new ObjectId(id)}
             const result = await productCollection.deleteOne(query)
@@ -243,7 +243,7 @@ async function run() {
           res.send(result)
         })
 
-        app.post('/orders', async(req,res)=> {
+        app.post('/orders', verifyToken, async(req,res)=> {
           const order = req.body;
           const result = await ordersCollection.insertOne(order)
           res.send(result)
