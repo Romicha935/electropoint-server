@@ -308,3 +308,4 @@ app.listen(port,()=> {
     console.log(`electropoint is the runing port on ${port}`);
     
 })
+module.exports = app
